@@ -7,13 +7,22 @@ from utils import *
 
 class PageRank():
     d = 0.7             # Dampling Factor
-    def __init__(self, graph):
-        G = self.graph = graph
-        nodes = self.graph.nodes()
-        N = len(nodes)
-        self.P = np.zeros((N,N))
-        self.r = np.zeros(N)
-        self.rs = np.zeros(N)
+    def __init__(self, nodes, edges):
+        self.graph = nx.DiGraph()
+        self.V = len(nodes)
+
+        self.graph.add_nodes_from(nodes, PR = 1.0/self.V)
+        self.graph.add_weighted_edges_from(edges)
+
+        self.P = np.zeros((self.V,self.V))
+        self.r = np.zeros(self.V)
+        self.rs = np.zeros(self.V)
+
+        self.calc_transition_table()
+
+    def calc_transition_table(self):
+        G = self.graph
+        nodes = G.nodes()
 
         for n in nodes:
             out_nodes = get_outlink(G, n)
@@ -26,7 +35,7 @@ class PageRank():
                 #P[idx(n),idx(o)] = 1.0/len(out_nodes) # No Weight Version (Weight == 1.0)
 
             self.r[idx(G,n)] = G.node[n]['PR']
-            self.rs[idx(G,n)] = 1.0/N
+            self.rs[idx(G,n)] = 1.0/self.V
 
     def calc_rank(self):
         for i in xrange(100):
@@ -45,3 +54,29 @@ class PageRank():
 
     def get_restart(self):
         return self.rs
+
+    def print_graph(self):
+        print(self.graph.nodes(data=True))
+        print(self.graph.edges(data=True))
+
+
+"""
+    def __init__(self, graph):
+        self.V = len(nodes)
+        self.P = np.zeros((self.V,self.V))
+        self.r = np.zeros(self.V)
+        self.rs = np.zeros(self.V)
+
+        for n in nodes:
+            out_nodes = get_outlink(G, n)
+            #print n, out_nodes
+            weight_sum = sum(list(map(lambda x : G.edge[n][x]['weight'], out_nodes)))
+            #print "WS", weight_sum
+            for o in out_nodes:
+                self.P[idx(G,n),idx(G,o)] = G.edge[n][o]['weight']/weight_sum # Weight Graph Version
+                #print n, o, G.edge[n][o]['weight'], weight_sum
+                #P[idx(n),idx(o)] = 1.0/len(out_nodes) # No Weight Version (Weight == 1.0)
+
+            self.r[idx(G,n)] = G.node[n]['PR']
+            self.rs[idx(G,n)] = 1.0/self.V
+"""
