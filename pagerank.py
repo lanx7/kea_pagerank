@@ -2,3 +2,4 @@
 # r(T+1) = (1-d)W*r + dp
 # W (Transition Matrix), p(restart vector)
 
+
