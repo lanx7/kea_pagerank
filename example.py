@@ -1,3 +1,4 @@
+# Test Single Version of PageRank
 # -*- coding: utf-8 -*-
 import networkx as nx
 
@@ -7,25 +8,19 @@ def page_rank_value(node):
 
 def get_inlink(node):
     global G
-    edges = G.edges()
+    edges = G.in_edges(node)
     result = []
     for e in edges:
-        #print e, e[1]
-        if node == e[1]:
-            #print 'got it'
-            result.append(e[0])
+        result.append(e[0])
     #print "Inlink of %s" % node,result
     return result
 
 def get_outlink(node):
     global G
-    edges = G.edges()
+    edges = G.out_edges(node)
     result = []
     for e in edges:
-        #print e, e[1]
-        if node == e[0]:
-            #print 'got it'
-            result.append(e[1])
+        result.append(e[1])
     #print "Outlink of %s" % node, result
     return result
 

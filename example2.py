@@ -1,29 +1,25 @@
+# Test Matrix Version of PageRank
+
 # -*- coding: utf-8 -*-
 import networkx as nx
 import numpy as np
 
 def get_inlink(node):
     global G
-    edges = G.edges()
+    edges = G.in_edges(node)
     result = []
     for e in edges:
-        #print e, e[1]
-        if node == e[1]:
-            #print 'got it'
-            result.append(e[0])
-    #print "Inlink of %s" % node,result
+        result.append(e[0])
+    print "Inlink of %s" % node,result
     return result
 
 def get_outlink(node):
     global G
-    edges = G.edges()
+    edges = G.out_edges(node)
     result = []
     for e in edges:
-        #print e, e[1]
-        if node == e[0]:
-            #print 'got it'
-            result.append(e[1])
-    #print "Outlink of %s" % node, result
+        result.append(e[1])
+    print "Outlink of %s" % node, result
     return result
 
 def idx(node):
@@ -35,8 +31,8 @@ G = nx.DiGraph()
 
 nodes = ['A','B','C']
 #edges = [('A','B', 1.0), ('B','C',1.0), ('C','A',1.0)]
-#edges = [('A','B', 1.0), ('B','C',1.0), ('C','A',1.0), ('C','B',1.0)]
-edges = [('A','B', 1.0), ('B','C',1.0), ('C','B',1.0), ('B','A',1.0)]
+edges = [('A','B', 1.0), ('B','C',1.0), ('C','A',1.0), ('C','B',1.0)]
+#edges = [('A','B', 1.0), ('B','C',1.0), ('C','B',1.0), ('B','A',1.0)]
 G.add_nodes_from(nodes)
 G.add_weighted_edges_from(edges)
 G.node['A']['PR'] = 0.33
