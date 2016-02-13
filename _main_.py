@@ -28,9 +28,15 @@ with open(test_file,'r') as f:
 
 k = DocumentAnalyzer()
 sentences = k.sentence_extract2(lines)
-keywords = k.keyword_extract(sentences)
-for k in keywords:
-    print k[0], k[1]
+keywords1 = k.keyword_extract(sentences)
+keywords2 = k.keyword_extract_rank(sentences)
+
+for (key, value) in keywords1:
+    print key, value
+
+for (key, value) in keywords2:
+    print key, value
+
 
 
 

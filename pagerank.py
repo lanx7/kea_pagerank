@@ -50,7 +50,8 @@ class PageRank():
         return self.P
 
     def get_rank(self):
-        return self.r
+        nodes = sorted(self.graph.nodes())
+        return zip(nodes,self.r)
 
     def get_restart(self):
         return self.rs

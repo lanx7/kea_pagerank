@@ -4,6 +4,8 @@ __author__ = 'lanx'
 
 import MeCab
 import operator
+from utils import *
+import pagerank
 
 class DocumentAnalyzer():
     MAX_KEYWORD = 10
@@ -24,6 +26,43 @@ class DocumentAnalyzer():
                 continue
             sentences.append(line.rstrip())
         return sentences
+
+    def keyword_extract_rank(self, sentences):
+        words = []
+        word_frequency = {}
+        sequence_frequency = {}
+        for sentence in sentences:
+            tokens = self.extract_noun_only(sentence)
+            prev = 'NULL'
+            for t in tokens:
+                word_frequency.setdefault(t, 0)
+                word_frequency[t] += 1
+                if prev != 'NULL':
+                    sequence_frequency.setdefault(tuple((prev,t)),0)
+                    sequence_frequency[tuple((prev,t))] += 1
+                prev = t
+            #words.extend(tokens)
+
+        sorted_word = sorted(word_frequency.items(), key=operator.itemgetter(1), reverse=True)
+        nodes = []
+        edges = []
+        for w in sorted_word:
+            print w[0], w[1]
+            nodes.append(w[0])
+
+        sorted_edge = sorted(sequence_frequency.items(), key=operator.itemgetter(1), reverse=True)
+        for e in sorted_edge:
+            print e[0][0], e[0][1], e[1]
+            edges.append(tuple((e[0][0],e[0][1], e[1])))
+
+        p = pagerank.PageRank(nodes, edges)
+        p.print_graph()
+        print p.get_transition_table()
+        print p.calc_rank()
+        result = p.get_rank()
+        result = sorted(result, key=operator.itemgetter(1), reverse=True)
+        return result[:self.MAX_KEYWORD]
+
 
     def keyword_extract(self, sentences):
         words = []
