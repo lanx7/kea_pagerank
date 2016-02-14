@@ -10,13 +10,18 @@ class PageRank():
     def __init__(self, nodes, edges):
         self.graph = nx.DiGraph()
         self.V = len(nodes)
-
-        self.graph.add_nodes_from(nodes, PR = 1.0/self.V)
+        node_names = [n[0] for n in nodes]
+        self.graph.add_nodes_from(node_names, PR = 1.0/self.V)
         self.graph.add_weighted_edges_from(edges)
+
+        for n in nodes:
+            name = n[0]; weight =n[1]
+            self.graph.node[name]['weight'] = weight
 
         self.P = np.zeros((self.V,self.V))
         self.r = np.zeros(self.V)
         self.rs = np.zeros(self.V)
+
 
         self.calc_transition_table()
 
@@ -35,7 +40,15 @@ class PageRank():
                 #P[idx(n),idx(o)] = 1.0/len(out_nodes) # No Weight Version (Weight == 1.0)
 
             self.r[idx(G,n)] = G.node[n]['PR']
-            self.rs[idx(G,n)] = 1.0/self.V
+            #self.rs[idx(G,n)] = 1.0/self.V
+            self.rs[idx(G,n)] = G.node[n]['weight']
+
+        sum_rs = sum(self.rs)
+        self.rs = self.rs / float(sum_rs) # Vector / Scalar
+        #self.rs[:] = [float(n)/sum_rs for n in self.rs]
+        #self.rs = map(lambda x: float(x)/sum_rs, self.rs)
+        print type(self.rs)
+        print 'restart vector', self.rs
 
     def calc_rank(self):
         for i in xrange(100):
@@ -60,6 +73,8 @@ class PageRank():
         print(self.graph.nodes(data=True))
         print(self.graph.edges(data=True))
 
+    def set_restart_vector(self, vector):
+        self.rs = vector.copy()
 
 """
     def __init__(self, graph):

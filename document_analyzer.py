@@ -47,18 +47,18 @@ class DocumentAnalyzer():
         nodes = []
         edges = []
         for w in sorted_word:
-            print w[0], w[1]
-            nodes.append(w[0])
+            #print w[0], w[1]
+            nodes.append(tuple((w[0],w[1])))
 
         sorted_edge = sorted(sequence_frequency.items(), key=operator.itemgetter(1), reverse=True)
         for e in sorted_edge:
-            print e[0][0], e[0][1], e[1]
+            #print e[0][0], e[0][1], e[1]
             edges.append(tuple((e[0][0],e[0][1], e[1])))
 
         p = pagerank.PageRank(nodes, edges)
         p.print_graph()
-        print p.get_transition_table()
-        print p.calc_rank()
+        #print p.get_transition_table()
+        p.calc_rank()
         result = p.get_rank()
         result = sorted(result, key=operator.itemgetter(1), reverse=True)
         return result[:self.MAX_KEYWORD]
